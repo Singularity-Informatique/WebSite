@@ -1,0 +1,82 @@
+# ---------------------------------------------------------------------------
+# SINGULARITY — Publication GitHub Pages
+# Construit le site statique et le déploie via GitHub Actions.
+# Vérifie d'abord les types (Node 24 LTS) : une erreur de typage
+# bloque la publication au lieu de partir en ligne.
+#
+# Utilisation :
+#   1. Settings → Pages → Source : GitHub Actions
+#   2. Push sur la branche main (ou lancement manuel).
+#
+# Le chemin de base est calculé automatiquement :
+#   - variable de dépôt SITE_DOMAIN définie  → base « / » (nom de domaine)
+#   - dépôt « utilisateur.github.io »        → base « / »
+#   - tout autre dépôt                       → base « /nom-du-depot/ »
+# ---------------------------------------------------------------------------
+
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v5
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Vérifier les types
+        run: npm run typecheck
+
+      - name: Calculer le chemin de base
+        id: base
+        env:
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
+        run: |
+          if [[ -n "$SITE_DOMAIN" ]]; then
+            echo "path=/" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event.repository.name }}" == "${{ github.repository_owner }}.github.io" ]]; then
+            echo "path=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=/${{ github.event.repository.name }}/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Construire le site
+        run: npm run build -- --base="${{ steps.base.outputs.path }}"
+
+      - name: Téléverser l'artefact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Déployer sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

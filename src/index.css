@@ -1,0 +1,646 @@
+/* =========================================================================
+   SINGULARITY — SYSTÈME DE DESIGN
+   Direction artistique : Dark Industrial / Warm Cybernetic Energy
+   Palette exclusive : noirs, graphite, orange et ambre.
+   ========================================================================= */
+
+/* Polices auto-hébergées (aucune requête vers un service tiers). */
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "@fontsource/ibm-plex-mono/latin-600.css";
+@import "@fontsource/ibm-plex-mono/latin-700.css";
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-600.css";
+/* Inter 700 : gras réel des <strong> (pages légales). Le 500 n'était utilisé
+   nulle part ; il est remplacé à nombre de fichiers constant. */
+@import "@fontsource/inter/latin-700.css";
+
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Jetons de design (variables centralisées)                          */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Palette officielle Singularity — alignée sur l'emblème méca :
+     noirs neutres (fond du logo), acier chromé, énergie orange/ambre. */
+  --color-noir: #060507; /* Noir profond (fond de l'emblème) */
+  --color-noir2: #0b0a0d; /* Noir secondaire */
+  --color-graphite: #161519; /* Graphite — acier sombre */
+  --color-surface: #201f24; /* Surface secondaire */
+  --color-bordure: #343239; /* Bordures — gris acier */
+  --color-blanc: #f1f2f4; /* Blanc chromé */
+  --color-texte2: #a6a4ab; /* Texte secondaire — gris acier */
+  --color-orange: #ff5a00; /* Orange principal — fil lumineux du logo */
+  --color-orange2: #ff7900; /* Orange lumineux — halo du logo */
+  --color-ambre: #ffab48; /* Ambre lumineux */
+  --color-ambre2: #e0a647; /* Ambre doré — chiffres binaires de l'emblème */
+  --color-gris-chaud: #77736d; /* Gris chaud */
+  --color-bleu-glacier: #a9dce5; /* Bleu glacier */
+  --color-sable-ambre: #c9ad85; /* Sable ambré — surbrillance de texte */
+
+  /* Typographies */
+  --font-display: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                               */
+/* ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-noir font-body text-blanc antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-orange2);
+    color: var(--color-noir);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-orange2);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-noir);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface);
+    border: 2px solid var(--color-noir);
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ambre2);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Composants                                                         */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .container-x {
+    /* Plafond très large (1 728 px) : le contenu occupe presque toute la
+       largeur utile sur laptop/PC, avec une marge latérale douce qui croît
+       avec la taille de l'écran. */
+    @apply mx-auto w-full max-w-[108rem] px-5 sm:px-10 lg:px-14;
+  }
+
+  /* Boutons */
+  .btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-2.5 rounded-sm px-6 py-3.5 font-display text-sm font-semibold tracking-wide transition-all duration-300 select-none;
+  }
+  .btn-primary {
+    /* Néon sur noir : le contour et le texte portent la lumière, pas le fond.
+       Miroir direct des cartes (langage néon unique). */
+    background: var(--color-noir2);
+    color: var(--color-ambre);
+    border: 1px solid rgba(224, 166, 71, 0.55);
+    box-shadow: 0 0 18px -6px rgba(255, 122, 0, 0.22);
+  }
+  .btn-primary:hover {
+    color: var(--color-orange2);
+    border-color: var(--color-orange2);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 0, 0.3),
+      0 0 34px -4px rgba(255, 122, 0, 0.5),
+      0 16px 40px -16px rgba(255, 90, 0, 0.55);
+  }
+  .btn-ghost {
+    @apply border border-bordure text-blanc;
+    background: rgba(13, 16, 20, 0.45);
+    backdrop-filter: blur(4px);
+  }
+  .btn-ghost:hover {
+    border-color: rgba(255, 122, 0, 0.6);
+    background: rgba(255, 90, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 0, 0.25),
+      0 0 28px -5px rgba(255, 122, 0, 0.38),
+      0 14px 40px -16px rgba(255, 90, 0, 0.45);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  /* Étiquette éditoriale */
+  .kicker {
+    @apply flex items-center gap-3 font-mono text-[11px] font-medium tracking-[0.28em] uppercase text-texte2 sm:text-xs;
+  }
+  .kicker::before {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    background: var(--color-orange);
+  }
+
+  /* Filet dégradé chaud */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-orange), var(--color-ambre), transparent);
+  }
+
+  /* Emplacement d'information à compléter */
+  .placeholder-slot {
+    @apply rounded-sm border border-dashed border-ambre2/50 bg-ambre2/10 px-4 py-3 font-mono text-xs text-ambre2/90;
+  }
+
+  /* Numéros fantômes (contour) */
+  .ghost-num {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(241, 243, 245, 0.16);
+  }
+
+  /* Texte dégradé chaud */
+  .text-gradient-warm {
+    background: linear-gradient(92deg, var(--color-orange2) 0%, var(--color-orange2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Texte dégradé ambre */
+  .text-gradient-amber {
+   background: linear-gradient(92deg, var(--color-ambre2) 0%, var(--color-ambre) 55%, var(--color-orange2) 100%);
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+  }
+
+  /* Lien avec micro-interaction */
+  .link-arrow {
+    @apply inline-flex items-center gap-2 font-display text-sm font-semibold text-blanc transition-colors duration-300;
+  }
+  .link-arrow .icon {
+    @apply text-orange2 transition-transform duration-300;
+  }
+  .group:hover .link-arrow .icon,
+  .link-arrow:hover .icon {
+    transform: translateX(4px);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Textures et ambiances                                              */
+/* ------------------------------------------------------------------ */
+.grain {
+  /* Désactivé côté App.tsx (test de performance) : garder la règle permet
+     une réactivation immédiate, sans réécrire le style. */
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix type='saturate' values='0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.6'/></svg>");
+  background-size: 160px 160px;
+}
+
+.grid-overlay {
+  background-image:
+    linear-gradient(rgba(241, 243, 245, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(241, 243, 245, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Animations                                                         */
+/* ------------------------------------------------------------------ */
+
+/* Apparition au défilement */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Entrée cinématique du hero */
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-fade {
+  opacity: 0;
+  animation: hero-fade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Transition de page */
+@keyframes page-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.page-fade {
+  animation: page-fade 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Dérive lente du visuel du hero (transform uniquement) */
+@keyframes kenburns {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1.14);
+  }
+}
+.kenburns {
+  animation: kenburns 26s ease-in-out infinite alternate;
+}
+
+/* Bande défilante des services */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  /* La translation couvre une moitié de rail (~7 500 px, 6 blocs) :
+     durée calibrée ≈ 9,4 px/s, identique sur toutes les machines
+     (le réglage système « réduire les animations » ne la modifie pas). */
+  animation: marquee 800s linear infinite;
+  will-change: transform;
+}
+
+/* Libellé « Développé avec » — halo lumineux balayé de gauche à droite,
+   composé exclusivement des couleurs officielles du site : orange (#ff5a00),
+   ambre (#ffab48), blanc chromé (#f1f2f4), ambre doré (#e0a647), orange
+   lumineux (#ff7900) et sable ambré (#c9ad85).
+   Le dégradé revient à l'orange en fin de course : la boucle est invisible.
+   Peint sur le texte seul (background-clip: text), pas de couche plein écran. */
+@keyframes spectrum-sweep {
+  from {
+    background-position: 200% 50%;
+  }
+  to {
+    background-position: 0% 50%;
+  }
+}
+.developpe-avec {
+  position: relative;
+  display: inline-block;
+  background-image: linear-gradient(
+    90deg,
+    #ff5a00 0%,
+    #ffab48 16%,
+    #f1f2f4 30%,
+    #e0a647 44%,
+    #ff7900 58%,
+    #c9ad85 72%,
+    #ff5a00 88%,
+    #ff5a00 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Aberration chromatique permanente, très discrète — orange et sable */
+  text-shadow:
+    -0.6px 0 rgba(255, 90, 0, 0.45),
+    0.6px 0 rgba(201, 173, 133, 0.4);
+  animation: spectrum-sweep 7s linear infinite;
+}
+
+/* Glitch : deux copies du libellé, même spectre (hérité), découpées en
+   tranches et décalées par salves courtes, à deux rythmes différents. */
+.developpe-avec::before,
+.developpe-avec::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+.developpe-avec::before {
+  animation: glitch-slice-a 5.2s steps(1, end) infinite;
+}
+.developpe-avec::after {
+  animation: glitch-slice-b 4.3s steps(1, end) infinite;
+}
+
+@keyframes glitch-slice-a {
+  0%,
+  84%,
+  100% {
+    opacity: 0;
+    transform: none;
+    clip-path: inset(0 0 100% 0);
+  }
+  85% {
+    opacity: 0.85;
+    transform: translate(-3px, -1px) skewX(-4deg);
+    clip-path: inset(0 0 55% 0);
+  }
+  86.5% {
+    opacity: 0.85;
+    transform: translate(2px, 1px) skewX(3deg);
+    clip-path: inset(18% 0 40% 0);
+  }
+  88% {
+    opacity: 0.85;
+    transform: translate(-2px, 0);
+    clip-path: inset(6% 0 62% 0);
+  }
+  89.5% {
+    opacity: 0;
+  }
+}
+@keyframes glitch-slice-b {
+  0%,
+  71%,
+  100% {
+    opacity: 0;
+    transform: none;
+    clip-path: inset(100% 0 0 0);
+  }
+  72% {
+    opacity: 0.8;
+    transform: translate(3px, 1px) skewX(3deg);
+    clip-path: inset(52% 0 0 0);
+  }
+  73.5% {
+    opacity: 0.8;
+    transform: translate(-2px, -1px) skewX(-3deg);
+    clip-path: inset(38% 0 0 0);
+  }
+  75% {
+    opacity: 0.8;
+    transform: translate(2px, 0);
+    clip-path: inset(70% 0 0 0);
+  }
+  76.5% {
+    opacity: 0;
+  }
+}
+
+/* Bandeau technologique — groupes indivisibles.
+   Chaque groupe se replie d'un bloc : un filet ne peut donc jamais se
+   retrouver orphelin en fin de ligne. Les filets n'apparaissent qu'à
+   partir de 1366 px, seule largeur où les quatre couches tiennent sur
+   une ligne avec le libellé ; en dessous, c'est un écart plus large
+   entre groupes qui les distingue.
+   Espacement symétrique autour du filet : 12 px de part et d'autre. */
+.tech-groups {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tech-group {
+  display: flex;
+  align-items: center;
+}
+@media (min-width: 640px) {
+  .tech-groups {
+    column-gap: 32px;
+  }
+}
+@media (min-width: 1366px) {
+  .tech-groups {
+    column-gap: 12px;
+  }
+  .tech-group + .tech-group {
+    border-left: 1px solid var(--color-bordure);
+    padding-left: 12px;
+  }
+}
+
+/* Mode contraste forcé : le dégradé serait invisible, on rend au texte
+   sa couleur système et on coupe les copies décoratives. */
+@media (forced-colors: active) {
+  .developpe-avec {
+    background-image: none;
+    color: CanvasText;
+    text-shadow: none;
+  }
+  .developpe-avec::before,
+  .developpe-avec::after {
+    display: none;
+  }
+}
+
+/* Indicateur de défilement */
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+.scroll-hint {
+  animation: scroll-hint 2.2s ease-in-out infinite;
+}
+
+/* Point d'activité */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+/* Curseur du terminal de prérequis — clignotement net, sans déplacement */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret-blink {
+  animation: caret-blink 1.15s steps(1) infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* Respect des préférences de réduction de mouvement                  */
+/* ------------------------------------------------------------------ */
+/* Exception volontaire : .pulse-dot reste animé. L'impulsion n'agit
+   que sur l'opacité d'un point de 6 px (aucun déplacement) — motif
+   jugé sûr dans les consignes « motion reduce », et la pastille d'état
+   doit rester lisible en toutes circonstances.                        */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal,
+  .hero-fade,
+  .page-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  .kenburns,
+  .scroll-hint,
+  .caret-blink,
+  .developpe-avec {
+    animation: none !important;
+  }
+  /* Le bandeau des services garde sa vitesse de 800 s sur toutes les
+     machines, y compris lorsque « réduire les animations » est actif :
+     choix validé — il reste le seul mouvement conservé, très lent. */
+  .developpe-avec::before,
+  .developpe-avec::after {
+    display: none !important;
+  }
+  .btn,
+  .btn-primary,
+  .btn-ghost,
+  .link-arrow .icon {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+
+/* Protection des images */
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* =========================================================================
+   Néon de survol — hors couche (unlayered) : doit primer sur les
+   utilitaires Tailwind (border-bordure…) qui passent après les couches.
+   Liseré net + diffusion orange large mais contenue.
+   ========================================================================= */
+.neon-hover:hover {
+  border-color: rgba(255, 122, 0, 0.6) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 122, 0, 0.25),
+    0 0 32px -4px rgba(255, 122, 0, 0.35),
+    0 20px 48px -20px rgba(255, 90, 0, 0.5) !important;
+}
+
+/* Fin du système de néon. */
+
+/* =========================================================================
+   Équerres du hero (accueil) — hors couche comme le néon de survol.
+   Quatre coins orange aux angles du panneau : signe d'encadrement
+   discret, bien plus léger qu'un liseré complet.
+   ========================================================================= */
+.neon-frame {
+  position: relative;
+}
+.neon-frame::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  --equerre-l: 18px;  /* longueur de chaque branche */
+  --equerre-e: 2px;   /* épaisseur */
+  --equerre-c: rgba(255, 122, 0, 0.9);
+  background:
+    /* coin haut-gauche : branche horizontale + verticale */
+    linear-gradient(var(--equerre-c), var(--equerre-c)) top left / var(--equerre-l) var(--equerre-e),
+    linear-gradient(var(--equerre-c), var(--equerre-c)) top left / var(--equerre-e) var(--equerre-l),
+    /* coin haut-droit */
+    linear-gradient(var(--equerre-c), var(--equerre-c)) top right / var(--equerre-l) var(--equerre-e),
+    linear-gradient(var(--equerre-c), var(--equerre-c)) top right / var(--equerre-e) var(--equerre-l),
+    /* coin bas-gauche */
+    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom left / var(--equerre-l) var(--equerre-e),
+    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom left / var(--equerre-e) var(--equerre-l),
+    /* coin bas-droit */
+    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom right / var(--equerre-l) var(--equerre-e),
+    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom right / var(--equerre-e) var(--equerre-l);
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 3px rgba(255, 122, 0, 0.45));
+}
+
+/* =========================================================================
+   Impression (Ctrl+P / PDF) — version papier lisible.
+   Ne s'applique qu'à l'impression : aucun effet à l'écran.
+   ========================================================================= */
+@media print {
+  @page { margin: 16mm 14mm; }
+
+  /* Le thème est sombre : on neutralise tous les aplats, y compris si
+     « arrière-plans graphiques » est coché dans la boîte d'impression. */
+  *, *::before, *::after { background: transparent !important; }
+  html, body { background: #fff !important; }
+
+  /* Texte blanc cassé sur noir à l'écran : sur papier, tout devient noir. */
+  body, h1, h2, h3, h4, p, li, span, a, strong, em {
+    color: #111 !important;
+    text-shadow: none !important;
+  }
+
+  /* Sans cette règle, les blocs encore cachés par l'animation d'apparition
+     (opacity: 0) s'impriment vides — soit la moitié de la page. */
+  .reveal, .hero-fade, .page-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* Navigation, bandeaux animés et boutons : sans objet sur papier. */
+  header, footer > div:first-child, .marquee-track, video, button, .sr-only {
+    display: none !important;
+  }
+
+  /* Un lien externe imprimé reste actionnable : son adresse suit le libellé. */
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; }
+
+  article, li, tr, figure { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+}
