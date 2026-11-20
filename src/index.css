@@ -174,25 +174,20 @@
     -webkit-text-stroke: 1px rgba(241, 243, 245, 0.16);
   }
 
-  /* Texte dégradé chaud */
+  /* Couleurs des deux lignes du hero.
+     La technique du dégradé clippé (background-clip: text) n'est pas fiable
+     sur WebKit : le minifieur colle les `var()` du dégradé
+     (`var(--color-ambre2)0%`), Safari rejette la déclaration entière et le
+     texte reçoit un remplissage de secours sombre. Ces deux lignes sont donc
+     peintes en couleur unie, sans clip. */
   .text-gradient-warm {
-    background: linear-gradient(92deg, var(--color-orange2) 0%, var(--color-orange2) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    /* iOS / Safari : sans cette ligne, le glyphe reste peint d'une couleur
-       opaque par-dessus le dégradé (texte gris sombre au lieu de l'orange). */
-    -webkit-text-fill-color: transparent;
+    /* Le dégradé d'origine allait d'un orange à lui-même : c'était un aplat. */
+    color: var(--color-orange2);
   }
 
-  /* Texte dégradé ambre */
   .text-gradient-amber {
-   background: linear-gradient(92deg, var(--color-ambre2) 0%, var(--color-ambre) 55%, var(--color-orange2) 100%);
-   -webkit-background-clip: text;
-   background-clip: text;
-   color: transparent;
-   /* Même correctif iOS que .text-gradient-warm ci-dessus. */
-   -webkit-text-fill-color: transparent;
+    /* Dégradé d'origine : ambre doré → ambre → orange. Aplat = ambre. */
+    color: var(--color-ambre);
   }
 
   /* Lien avec micro-interaction */
@@ -597,31 +592,15 @@ img {
    conserve donc son comportement d'origine.
    ------------------------------------------------------------------------- */
 @media (hover: none) and (pointer: coarse) {
-  /* Cartes : copie exacte de .neon-hover:hover, mêmes valeurs. */
+  /* Cartes : copie exacte de .neon-hover:hover, mêmes valeurs.
+     Les boutons ne sont pas concernés : la lumière y était trop présente
+     et ne correspondait pas au rendu attendu. */
   .neon-hover.is-lit {
     border-color: rgba(255, 122, 0, 0.6) !important;
     box-shadow:
       0 0 0 1px rgba(255, 122, 0, 0.25),
       0 0 32px -4px rgba(255, 122, 0, 0.35),
       0 20px 48px -20px rgba(255, 90, 0, 0.5) !important;
-  }
-
-  /* Boutons : la lumière du survol, sans le décalage de -2 px. Un
-     déplacement permanent serait perçu comme un défaut de mise en page. */
-  .btn-primary.is-lit {
-    color: var(--color-orange2);
-    border-color: var(--color-orange2);
-    box-shadow:
-      0 0 0 1px rgba(255, 122, 0, 0.3),
-      0 0 34px -4px rgba(255, 122, 0, 0.5),
-      0 16px 40px -16px rgba(255, 90, 0, 0.55);
-  }
-  .btn-ghost.is-lit {
-    border-color: rgba(255, 122, 0, 0.6);
-    box-shadow:
-      0 0 0 1px rgba(255, 122, 0, 0.25),
-      0 0 28px -5px rgba(255, 122, 0, 0.38),
-      0 14px 40px -16px rgba(255, 90, 0, 0.45);
   }
 }
 

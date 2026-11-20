@@ -1,15 +1,15 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-/** Éléments concernés : les cartes néon et les deux familles de boutons. */
-const SELECTEUR = ".neon-hover, .btn-primary, .btn-ghost";
+/** Éléments concernés : uniquement les cartes néon. */
+const SELECTEUR = ".neon-hover";
 
 /** Appareils sans survol réel : téléphones et tablettes tactiles. */
 const REQUETE_SANS_SURVOL = "(hover: none) and (pointer: coarse)";
 
 /**
- * Allume le néon des cartes et des boutons à l'arrivée dans l'écran,
- * et l'éteint à la sortie.
+ * Allume le néon des cartes tant qu'elles occupent la bande centrale de
+ * l'écran, et l'éteint dès qu'elles en sortent — par le haut comme par le bas.
  *
  * Pourquoi : sur un appareil tactile, `:hover` n'existe pas. Le navigateur
  * le simule au moment du tap — d'où un éclair orange d'une demi-seconde,
@@ -33,9 +33,11 @@ export default function NeonOnView() {
           entree.target.classList.toggle("is-lit", entree.isIntersecting);
         }
       },
-      /* Réserve de 6 % en haut et en bas : l'allumage intervient quand
-         l'élément est franchement entré, pas sur un liseré de pixels. */
-      { threshold: 0, rootMargin: "-6% 0px -6% 0px" }
+      /* Bande centrale : le cadre de référence est réduit à la zone comprise
+         entre 35 % et 65 % de la hauteur de l'écran. Une carte n'est donc
+         allumée que tant qu'elle occupe cette bande, et s'éteint dès qu'elle
+         en sort — par le haut comme par le bas. */
+      { threshold: 0, rootMargin: "-35% 0px -35% 0px" }
     );
 
     const observes = new WeakSet<Element>();
