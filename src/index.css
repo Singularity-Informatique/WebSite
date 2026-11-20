@@ -50,12 +50,22 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Verrouillage de l'axe horizontal : `hidden` masquait seulement la
+       barre de défilement, la zone restait défilable au doigt — d'où les
+       bandes noires pendant un glissement latéral (iOS et Android).
+       `clip` ne crée aucune zone défilable. La première ligne sert de
+       repli aux navigateurs qui ignorent `clip`. */
+    overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
   }
 
   body {
     @apply bg-noir font-body text-blanc antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+    overflow-x: clip;
+    overscroll-behavior-x: none;
   }
 
   ::selection {
@@ -170,6 +180,9 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    /* iOS / Safari : sans cette ligne, le glyphe reste peint d'une couleur
+       opaque par-dessus le dégradé (texte gris sombre au lieu de l'orange). */
+    -webkit-text-fill-color: transparent;
   }
 
   /* Texte dégradé ambre */
@@ -178,6 +191,8 @@
    -webkit-background-clip: text;
    background-clip: text;
    color: transparent;
+   /* Même correctif iOS que .text-gradient-warm ci-dessus. */
+   -webkit-text-fill-color: transparent;
   }
 
   /* Lien avec micro-interaction */
@@ -572,6 +587,44 @@ img {
     0 20px 48px -20px rgba(255, 90, 0, 0.5) !important;
 }
 
+/* -------------------------------------------------------------------------
+   Mobile : le néon s'allume à l'arrivée de l'élément dans l'écran.
+
+   Sur un appareil tactile, `:hover` n'existe pas : le navigateur le simule
+   au moment du tap, ce qui produisait un éclair orange d'une demi-seconde
+   avant le changement de page. La classe `is-lit` est posée par
+   NeonOnView.tsx, uniquement sur les appareils sans survol — l'ordinateur
+   conserve donc son comportement d'origine.
+   ------------------------------------------------------------------------- */
+@media (hover: none) and (pointer: coarse) {
+  /* Cartes : copie exacte de .neon-hover:hover, mêmes valeurs. */
+  .neon-hover.is-lit {
+    border-color: rgba(255, 122, 0, 0.6) !important;
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 0, 0.25),
+      0 0 32px -4px rgba(255, 122, 0, 0.35),
+      0 20px 48px -20px rgba(255, 90, 0, 0.5) !important;
+  }
+
+  /* Boutons : la lumière du survol, sans le décalage de -2 px. Un
+     déplacement permanent serait perçu comme un défaut de mise en page. */
+  .btn-primary.is-lit {
+    color: var(--color-orange2);
+    border-color: var(--color-orange2);
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 0, 0.3),
+      0 0 34px -4px rgba(255, 122, 0, 0.5),
+      0 16px 40px -16px rgba(255, 90, 0, 0.55);
+  }
+  .btn-ghost.is-lit {
+    border-color: rgba(255, 122, 0, 0.6);
+    box-shadow:
+      0 0 0 1px rgba(255, 122, 0, 0.25),
+      0 0 28px -5px rgba(255, 122, 0, 0.38),
+      0 14px 40px -16px rgba(255, 90, 0, 0.45);
+  }
+}
+
 /* Fin du système de néon. */
 
 /* =========================================================================
@@ -582,27 +635,38 @@ img {
 .neon-frame {
   position: relative;
 }
+/* Écrit en propriétés séparées avec des valeurs littérales : un raccourci
+   `background` contenant var() ET une barre oblique de taille était rejeté
+   en bloc par WebKit (Safari et Brave sur iOS), ce qui supprimait les
+   équerres. Géométrie inchangée : branches de 18 px, épaisseur de 2 px. */
 .neon-frame::before {
   content: "";
   position: absolute;
   inset: -1px;
   pointer-events: none;
-  --equerre-l: 18px;  /* longueur de chaque branche */
-  --equerre-e: 2px;   /* épaisseur */
-  --equerre-c: rgba(255, 122, 0, 0.9);
-  background:
+  background-image:
     /* coin haut-gauche : branche horizontale + verticale */
-    linear-gradient(var(--equerre-c), var(--equerre-c)) top left / var(--equerre-l) var(--equerre-e),
-    linear-gradient(var(--equerre-c), var(--equerre-c)) top left / var(--equerre-e) var(--equerre-l),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
     /* coin haut-droit */
-    linear-gradient(var(--equerre-c), var(--equerre-c)) top right / var(--equerre-l) var(--equerre-e),
-    linear-gradient(var(--equerre-c), var(--equerre-c)) top right / var(--equerre-e) var(--equerre-l),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
     /* coin bas-gauche */
-    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom left / var(--equerre-l) var(--equerre-e),
-    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom left / var(--equerre-e) var(--equerre-l),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
     /* coin bas-droit */
-    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom right / var(--equerre-l) var(--equerre-e),
-    linear-gradient(var(--equerre-c), var(--equerre-c)) bottom right / var(--equerre-e) var(--equerre-l);
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9)),
+    linear-gradient(rgba(255, 122, 0, 0.9), rgba(255, 122, 0, 0.9));
+  background-size:
+    18px 2px, 2px 18px,
+    18px 2px, 2px 18px,
+    18px 2px, 2px 18px,
+    18px 2px, 2px 18px;
+  background-position:
+    left top, left top,
+    right top, right top,
+    left bottom, left bottom,
+    right bottom, right bottom;
   background-repeat: no-repeat;
   filter: drop-shadow(0 0 3px rgba(255, 122, 0, 0.45));
 }

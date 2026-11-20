@@ -86,7 +86,7 @@ export default function Home() {
             </h1>
 
             <p
-              className="hero-fade neon-frame mt-6 max-w-xl rounded-sm bg-noir/40 px-5 py-4 text-center text-lg leading-relaxed text-texte2 backdrop-blur-sm sm:text-xl"
+              className="hero-fade neon-frame mt-6 max-w-xl rounded-sm bg-noir/40 px-5 py-4 text-center text-lg leading-relaxed text-texte2 sm:text-xl"
               style={{ animationDelay: "0.45s" }}
             >
               Singularity informatique fonde son approche sur la transparence des prestations, 

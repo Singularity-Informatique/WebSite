@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import Home from "@/pages/Home";
 import ImageProtection from "@/components/ImageProtection";
 import TechMarquee from "@/components/TechMarquee";
+import NeonOnView from "@/components/NeonOnView";
 
 /* ---------------------------------------------------------------------------
  * DÉCOUPAGE DU JAVASCRIPT
@@ -210,6 +211,7 @@ export default function App() {
       <ImageProtection />
       <ScrollToTop />
       <RouteAnnouncer />
+      <NeonOnView />
 
       {/* Lien d'évitement (accessibilité clavier) */}
       <a

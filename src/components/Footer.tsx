@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
-import { SiMastodon, SiMatrix } from "react-icons/si";
+import { SiInstagram, SiMastodon } from "react-icons/si";
 import Logo from "@/components/Logo";
 import Placeholder from "@/components/Placeholder";
 import { SERVICES } from "@/data/services";
 import { SITE, isEmailPlaceholder } from "@/config";
 
 /**
- * Réseaux sociaux du pied de page : profils et salon publics de
- * l'activité (X, Matrix, Mastodon).
+ * Réseaux sociaux du pied de page : profils publics de l'activité
+ * (X, Mastodon, Instagram).
  */
 const SOCIAL_LINKS = [
   {
@@ -18,14 +18,14 @@ const SOCIAL_LINKS = [
     Logo: FaXTwitter,
   },
   {
-    name: "Matrix",
-    url: "https://matrix.to/#/#Singularity-Community:matrix.org",
-    Logo: SiMatrix,
-  },
-  {
     name: "Mastodon",
     url: "https://mastodon.social/@Singularity_Informatique",
     Logo: SiMastodon,
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/singularity_informatique",
+    Logo: SiInstagram,
   },
 ];
 

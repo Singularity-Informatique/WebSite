@@ -114,7 +114,7 @@ export default function RessourcesLiensSecurite() {
   return (
     <>
       {/* ------------------------------------------------------- Introduction */}
-      <section className="relative border-b border-bordure bg-noir2 pt-28 pb-14 md:pt-36 md:pb-20">
+      <section className="relative overflow-hidden border-b border-bordure bg-noir2 pt-28 pb-14 md:pt-36 md:pb-20">
         <div className="absolute inset-0 grid-overlay opacity-25" aria-hidden="true" />
         <div className="absolute -left-32 -top-24 h-96 w-96 rounded-full bg-orange/8 blur-[120px]" aria-hidden="true" />
         <div className="container-x relative">
